@@ -39,7 +39,7 @@ var _ = {};
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    return n === undefined ? array[array.length -1] : array.slice(Math.max(0, array.length - n))
+    return n === undefined ? array[array.length -1] : array.slice([Math.max(0, array.length - n)])
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -96,7 +96,6 @@ var _ = {};
     return _.filter(collection, function(value){
       return !test(value);
     });
-
   };
 
   // Produce a duplicate-free version of the array.
@@ -112,7 +111,6 @@ var _ = {};
     }
 
     return results;
-
   };
 
 
@@ -152,10 +150,9 @@ var _ = {};
   // Note: you will nead to learn a bit about .apply to complete this.
   _.invoke = function(collection, functionOrKey, args) {
 
-    return _.map(collection, function(item){
+      return _.map(collection, function(item){
       var method = typeof functionOrKey === "string" ? item[functionOrKey] : functionOrKey;
       return method.apply(item, args)
-
     });
 
 
@@ -219,6 +216,7 @@ var _ = {};
     return !!_.reduce(collection, function(trueSoFar, value){
       return trueSoFar && iterator(value);
     }, true)
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
@@ -301,6 +299,7 @@ var _ = {};
       // The new function always returns the originally computed result.
       return result;
     };
+
   };
 
   // Memoize an expensive function by storing its results. You may assume
@@ -310,6 +309,18 @@ var _ = {};
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+
+    var results ={};
+
+    return function(){
+      // arguments[0] === arg ???
+      var arg = JSON.stringify(arguments);
+
+      if (!results[arg]){
+        results[arg] = func.apply(this, arguments)
+      }
+      return results[arg]
+    }
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -319,6 +330,13 @@ var _ = {};
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+
+    var args = Array.prototype.slice.call(arguemnts, 2);
+
+    setTimeout( function(){
+      func.apply(null, args)
+    }, wait)
+
   };
 
 
@@ -333,6 +351,7 @@ var _ = {};
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+
   };
 
 
